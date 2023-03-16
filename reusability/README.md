@@ -4,9 +4,11 @@ Paper (in review) [Machine Learning: Science and Technology](https://iopscience.
 
  
   - **March10/2023:** Illustrative code release for review
-    * A simple counting algorithm is given [here](reusability/graph/dag.py) for estimating the number of contexts for each learnable parameter.
-    * A sample notebook is provided [here](reusability/examples/sample_analyze_efficientnetv2b0.ipynb) for a demonstration of the graph analysis results from the paper.
+    * A very simple counting algorithm is given [here](reusability/graph/dag.py) for estimating the number of contexts for each learnable parameter.
     * Implementation of scope for aggressive parameter sharing is given [here](reusability/aggressive_sharing/scoped_conv.py)
+    * A sample notebook is provided [here](reusability/examples/sample_analyze_efficientnetv2b0.ipynb) for a demonstration of the graph analysis results from the paper.
+    * A sample [notebook](reusability/examples/sample_analyze_figures.ipynb) reproduces the results from the below examples.
+    
   - **Next**: Full code release after acceptance.
 
 ## The reusability prior
@@ -16,17 +18,18 @@ We conjecture the expected number of __contexts__ for model components is the ma
 
 
 ## What is a context?
-![](reusability/figures/figure1a_context.png?raw=true)
+<img src="reusability/figures/figure1a_context.png" width="60%" height="60%">
+
 
 A context is a path from a parameter associated with an input to an output. $C_1$ is the bold path from $w_1$ associated with $i_1$ through functions $f_1$, $f_2$, .., $f_m$ contributing to the output $O_1$.  Note that $w_1$ can contribute to $O_1$ through multiple contexts (e.g. $C_1$ and $C_2$). Please see our paper (section 1.1) for a more formal definition.
 
 
 ## A simple counting approach
-![](reusability/figures/figure3a_horizontal_unrolling.png?raw=true)
+<img src="reusability/figures/figure3a_horizontal_unrolling.png" width="30%" height="30%">
 
 Frequencies (i.e. the number of contexts) of each learnable parameter in the above graph can be directly counted from the unrolled graph below:
 
-![](reusability/figures/figure3b_horizontal_unrolling.png?raw=true)
+<img src="reusability/figures/figure3b_horizontal_unrolling.png" width="60%" height="60%">
 
 Alternatively, our illustrative [code](reusability/graph/dag.py) for counting provides a simple but highly inefficient way to calculate the counts without horizontal unrolling:
 
@@ -75,17 +78,17 @@ The recursive approach for counting has exponential complexity. For larger model
 ## Quantities for model comparison
 
 ### Total surprisal
-Total surprisal is defined as $S_G = -\sum_{i=1}^{N_G} {\log p(w_i)}$  where ${N_G}$ is the number of learnable parameters.
+Total surprisal is defined as: $$S_G = - \sum_{i=1}^{N_G} {\log p(w_i)}$$  where ${N_G}$ is the number of learnable parameters.
 
 In this example ${N_G}=8$ and $S_G = (4 * log2(6) + 4 * log2(12)) = 24.68$.
 
 ### Entropy
-Entropy, or the expected surprisal, is defined as $H(W) = -\sum_{i=1}^{N_G} {p(w_i) \log p(w_i)}$.
+Entropy, or the expected surprisal, is defined as: $$H(W) = -\sum_{i=1}^{N_G} {p(w_i) \log p(w_i)}.$$
 
 In this example $H(W) = (4 * 1/6 * log2(6) + 4 * 1/12 * log2(12)) = 2.92$.
 
 ### Expected spread
-The expected spread is given by $E[\log_{2}|C|] = \sum_{i=1}^{N_G} p(w_{i}) \log_{2}|C_{w_{i}}|$ where $|C_{w_i}|$ is the cardinality of the set of all contexts for $w_i$ (e.g. the counts we obtained from the horizontally unrolled graph).
+The expected spread is given by: $$E[\log_{2}|C|] = \sum_{i=1}^{N_G} p(w_{i}) \log_{2}|C_{w_{i}}|$$ where $|C_{w_i}|$ is the cardinality of the set of all contexts for $w_i$ (e.g. the counts we obtained from the horizontally unrolled graph).
 
 In this example $E[\log_{2}|C|] = 4 * 1/6 * log2(2) + 4 * 1/12 * log2(1) = 0.67$
 
@@ -99,16 +102,16 @@ In this example  $N_{I}=2$ and $|G|=2+1+8=11$ and $P_G = log2(24.68 * 2/11) = 2.
 ### Expected spread based performance estimation
 As an alternative approach, we propose using the expected spread for estimating the descriptive reusability of a model, with the assumption that when other conditions are the same or similar, a model with higher descriptive reusability is more parameter efficient and would perform better:
 
-$P'_G = \log_{2}\left(N_G   E[\log_{2}|C| + 1] \frac{N_{I}}{|G|}\right)$
+$P_G = \log_{2}\left(N_G   E[\log_{2}|C| + 1] \frac{N_{I}}{|G|}\right)$
 
-In this example  $N_{I}=2$ and $|G|=2+1+8=11$ and $P'_G = log2((0.67 + 1) * 8 * 2/11) = 1.28$
+In this example  $N_{I}=2$ and $|G|=2+1+8=11$ and $P_G = log2((0.67 + 1) * 8 * 2/11) = 1.28$
 
 ## Comparing different graphs
-![](reusability/figures/figure2a_parameter_efficiency.png?raw=true)
+<img src="reusability/figures/figure2a_parameter_efficiency.png" width="30%" height="30%">
 
 We call graphs like above a __uniform graph__, where there is no parameter sharing, and each parameter has only a single context, hence horizontal unrolling leaves them the same. They always have the maximum entropy and an expected spread of zero.
 
-![](reusability/figures/figure2b_parameter_efficiency.png?raw=true)
+<img src="reusability/figures/figure2b_parameter_efficiency.png" width="30%" height="30%">
 
 Above graph depicts a second graph with the same number of parameters. It is not uniform as some parameters have more than one context.
 
@@ -134,7 +137,7 @@ For the second graph:
 - Total surprisal based performance estimation $P_G = log2(24.58 * 2/11) = 2.16$
 - Expected spread based performance estimation $P'_G = log2((0.4 + 1) * 8 * 2/11) = 1.03$
 
-The second graph has higher performance estimations, total surprisal, and expected spread.
+The second graph has higher performance estimations, total surprisal, and expected spread. 
 
 ## Conclusion
 Overall, our framework allows comparing arbitrary directed acyclic graphs in a quantifiable way by relying on a simple counting approach. In practice we applied our technique to several EfficientNetv2 and ResNet-50 models and this approach was able to properly rank them according to their performance _without relying on any training_. More details are available in the paper.
