@@ -4,17 +4,17 @@ Paper (in review) [Machine Learning: Science and Technology](https://iopscience.
 
  
   - **March10/2023:** Illustrative code release for review
-    * A very simple counting algorithm is given [here](reusability/graph/dag.py) for estimating the number of contexts for each learnable parameter.
-    * Implementation of scope for aggressive parameter sharing is given [here](reusability/aggressive_sharing/scoped_conv.py)
-    * A sample notebook is provided [here](reusability/examples/sample_analyze_efficientnetv2b0.ipynb) for a demonstration of the graph analysis results from the paper.
-    * A sample [notebook](reusability/examples/sample_analyze_figures.ipynb) reproduces the results from the below examples.
+	* A very simple counting algorithm is given [here](reusability/graph/dag.py) for estimating the number of contexts for each learnable parameter.
+	* Implementation of scope for aggressive parameter sharing is given [here](reusability/aggressive_sharing/scoped_conv.py)
+	* A sample notebook is provided [here](reusability/examples/sample_analyze_efficientnetv2b0.ipynb) for a demonstration of the graph analysis results from the paper.
+	* A sample [notebook](reusability/examples/sample_analyze_figures.ipynb) reproduces the results from the below examples.
     
   - **Next**: Full code release after acceptance.
 
 ## The reusability prior
 We conjecture the expected number of __contexts__ for model components is the major reason for differences in model performance. We introduce the reusability prior as follows:
 
-> Model components are forced to function in diverse contexts not only due to the training, data, augmentation, and regularization choices but also due to the model design itself. These aspects explicitly or implicitly impact the expected number of contexts for model components. Until model capacity is reached, maximizing this number improves parameter efficiency. By relying on the repetition of reusable components, a model can learn to describe an approximation of the desired function more efficiently with fewer parameters.
+> Model components are forced to function in diverse contexts not only due to the training, data, augmentation, and regularization choices but also due to the model design itself. These aspects explicitly or implicitly impact the expected number of contexts for model components. Maximizing this number improves parameter efficiency for models of similar size and capacity. By relying on the repetition of reusable components, a model can learn to describe an approximation of the desired function more efficiently with fewer parameters.
 
 
 ## What is a context?
@@ -40,14 +40,14 @@ def recursive_count(node):
    node.count += 1
 
    for source in get_sources(node):
-       recursive_count(source)
+   	recursive_count(source)
 
 
 def horizontal_unroll_count(leaf_nodes):
    """Recursively count the total number of contexts for all nodes"""
 
    for node in leaf_nodes:
-       recursive_count(node)
+   	recursive_count(node)
 ```
 This leads to the following counts:
 ```
@@ -90,7 +90,7 @@ In this example $H(W) = (4 * 1/6 * log2(6) + 4 * 1/12 * log2(12)) = 2.92$.
 ### Expected spread
 The expected spread is given by: $$E[\log_{2}|C|] = \sum_{i=1}^{N_G} p(w_{i}) \log_{2}|C_{w_{i}}|$$ where $|C_{w_i}|$ is the cardinality of the set of all contexts for $w_i$ (e.g. the counts we obtained from the horizontally unrolled graph).
 
-In this example $E[\log_{2}|C|] = 4 * 1/6 * log2(2) + 4 * 1/12 * log2(1) = 0.67$
+In this example, $E[\log_{2}|C|] = 4 * 1/6 * log2(2) + 4 * 1/12 * log2(1) = 0.67$
 
 ### Total surprisal based performance estimation
 We propose using the total surprisal for estimating the descriptive ability of a model, with the assumption that when other conditions are the same or similar, a model with a higher descriptive ability would perform better:
@@ -137,8 +137,7 @@ For the second graph:
 - Total surprisal based performance estimation $P_G = log2(24.58 * 2/11) = 2.16$
 - Expected spread based performance estimation $P'_G = log2((0.4 + 1) * 8 * 2/11) = 1.03$
 
-The second graph has higher performance estimations, total surprisal, and expected spread. 
+The second graph has higher performance estimations, total surprisal, and expected spread.
 
 ## Conclusion
 Overall, our framework allows comparing arbitrary directed acyclic graphs in a quantifiable way by relying on a simple counting approach. In practice we applied our technique to several EfficientNetv2 and ResNet-50 models and this approach was able to properly rank them according to their performance _without relying on any training_. More details are available in the paper.
-
