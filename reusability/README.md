@@ -75,33 +75,33 @@ The recursive approach for counting has exponential complexity. For larger model
 ## Quantities for model comparison
 
 ### Total surprisal
-Total surprisal is defined as $\mathcal{S}_\mathcal{G} = -\sum_{i=1}^{\mathrm{N}_\mathcal{G}} {\log \mathrm{p}(w_i)}$  where ${\mathrm{N}_\mathcal{G}}$ is the number of learnable parameters.
+Total surprisal is defined as $S_G = -\sum_{i=1}^{N_G} {\log p(w_i)}$  where ${N_G}$ is the number of learnable parameters.
 
-In this example ${\mathrm{N}_\mathcal{G}}=8$ and $\mathcal{S}_\mathcal{G} = (4 * log2(6) + 4 * log2(12)) = 24.68$.
+In this example ${N_G}=8$ and $S_G = (4 * log2(6) + 4 * log2(12)) = 24.68$.
 
 ### Entropy
-Entropy, or the expected surprisal, is defined as $\mathrm{H}(W) = -\sum_{i=1}^{\mathrm{N}_\mathcal{G}} {\mathrm{p}(w_i) \log \mathrm{p}(w_i)}$.
+Entropy, or the expected surprisal, is defined as $H(W) = -\sum_{i=1}^{N_G} {p(w_i) \log p(w_i)}$.
 
-In this example $\mathrm{H}(W) = (4 * 1/6 * log2(6) + 4 * 1/12 * log2(12)) = 2.92$.
+In this example $H(W) = (4 * 1/6 * log2(6) + 4 * 1/12 * log2(12)) = 2.92$.
 
 ### Expected spread
-The expected spread is given by $\mathrm{E}[\log_{2}|\mathcal{C}|] = \sum_{i=1}^{\mathrm{N}_\mathcal{G}} \mathrm{p}(w_{i}) \log_{2}|\mathcal{C}_{w_{i}}|$ where $|\mathcal{C}_{w_i}|$ is the cardinality of the set of all contexts for $w_i$ (e.g. the counts we obtained from the horizontally unrolled graph).
+The expected spread is given by $E[\log_{2}|C|] = \sum_{i=1}^{N_G} p(w_{i}) \log_{2}|C_{w_{i}}|$ where $|C_{w_i}|$ is the cardinality of the set of all contexts for $w_i$ (e.g. the counts we obtained from the horizontally unrolled graph).
 
-In this example $\mathrm{E}[\log_{2}|\mathcal{C}|] = 4 * 1/6 * log2(2) + 4 * 1/12 * log2(1) = 0.67$
+In this example $E[\log_{2}|C|] = 4 * 1/6 * log2(2) + 4 * 1/12 * log2(1) = 0.67$
 
 ### Total surprisal based performance estimation
 We propose using the total surprisal for estimating the descriptive ability of a model, with the assumption that when other conditions are the same or similar, a model with a higher descriptive ability would perform better:
 
-$\mathcal{P}_\mathcal{G} = \log_{2}\left(\mathcal{S}_\mathcal{G}  \frac{\mathrm{N}_{I}}{|\mathcal{G}|}\right)$ where $\mathrm{N}_{I}$ the total number of input nodes and $|\mathcal{G}|$ the summation of the total number of input, output and weight nodes.
+$P_G = \log_{2}\left(S_G  \frac{N_{I}}{|G|}\right)$ where $N_{I}$ the total number of input nodes and $|G|$ the summation of the total number of input, output and weight nodes.
 
-In this example  $\mathrm{N}_{I}=2$ and $|\mathcal{G}|=2+1+8=11$ and $\mathcal{P}_\mathcal{G} = log2(24.68 * 2/11) = 2.17$
+In this example  $N_{I}=2$ and $|G|=2+1+8=11$ and $P_G = log2(24.68 * 2/11) = 2.17$
 
 ### Expected spread based performance estimation
 As an alternative approach, we propose using the expected spread for estimating the descriptive reusability of a model, with the assumption that when other conditions are the same or similar, a model with higher descriptive reusability is more parameter efficient and would perform better:
 
-$\mathcal{P'}_\mathcal{G} = \log_{2}\left(\mathrm{N}_\mathcal{G}   \mathrm{E}[\log_{2}|\mathcal{C}| + 1] \frac{\mathrm{N}_{I}}{|\mathcal{G}|}\right)$
+$P'_G = \log_{2}\left(N_G   E[\log_{2}|C| + 1] \frac{N_{I}}{|G|}\right)$
 
-In this example  $\mathrm{N}_{I}=2$ and $|\mathcal{G}|=2+1+8=11$ and $\mathcal{P'}_\mathcal{G} = log2((0.67 + 1) * 8 * 2/11) = 1.28$
+In this example  $N_{I}=2$ and $|G|=2+1+8=11$ and $P'_G = log2((0.67 + 1) * 8 * 2/11) = 1.28$
 
 ## Comparing different graphs
 ![](reusability/figures/figure2a_parameter_efficiency.png?raw=true)
@@ -114,25 +114,25 @@ Above graph depicts a second graph with the same number of parameters. It is not
 
 For the uniform graph:
 
-- The number of parameters: ${\mathrm{N}_\mathcal{G}}=8$,
-- Input nodes: $\mathrm{N}_{I}=2$
-- Size: $|\mathcal{G}|=2+1+8=11$
-- Total surprisal: $\mathcal{S}_\mathcal{G} = 8 * log2(8) = 24.00$,
-- Entropy: $\mathrm{H}(W) = 8 * 1/8 * log2(8) = 3$ (which is the maximum possible entropy since $P(W)$ is uniform),
-- Expected spread: $\mathrm{E}[\log_{2}|\mathcal{C}|] = 8 * 1/8 * log2(1) = 0$
-- Total surprisal based performance estimation: $\mathcal{P}_\mathcal{G} = log2(24 * 2/11) = 2.13$
-- Expected spread based performance estimation: $\mathcal{P'}_\mathcal{G} = log2((0.0 + 1) * 8 * 2/11) = 0.54$
+- The number of parameters: ${N_G}=8$,
+- Input nodes: $N_{I}=2$
+- Size: $|G|=2+1+8=11$
+- Total surprisal: $S_G = 8 * log2(8) = 24.00$,
+- Entropy: $H(W) = 8 * 1/8 * log2(8) = 3$ (which is the maximum possible entropy since $P(W)$ is uniform),
+- Expected spread: $E[\log_{2}|C|] = 8 * 1/8 * log2(1) = 0$
+- Total surprisal based performance estimation: $P_G = log2(24 * 2/11) = 2.13$
+- Expected spread based performance estimation: $P'_G = log2((0.0 + 1) * 8 * 2/11) = 0.54$
 
 For the second graph:
 
-- The number of parameters: ${\mathrm{N}_\mathcal{G}}=8$,
-- Input nodes: $\mathrm{N}_{I}=2$
-- Size: $|\mathcal{G}|=2+1+8=11$
-- Total surprisal: $\mathcal{S}_\mathcal{G} = 6 * log2(10) + 2 * log2(5) = 24.58$ as two parameters have two contexts and each of the rest has a single context,
-- Entropy: $\mathrm{H}(W) = 6 * 1/10 * log2(10) + 2 * 1/5 * log2(5) = 2.92$ (which is lower than the maximum possible entropy we saw from the uniform graph),
-- Expected spread: $\mathrm{E}[\log_{2}|\mathcal{C}|] = 6 * 1/10 * log2(1) + 2 * 1/5 * log2(2) = 0.4$
-- Total surprisal based performance estimation $\mathcal{P}_\mathcal{G} = log2(24.58 * 2/11) = 2.16$
-- Expected spread based performance estimation $\mathcal{P'}_\mathcal{G} = log2((0.4 + 1) * 8 * 2/11) = 1.03$
+- The number of parameters: ${N_G}=8$,
+- Input nodes: $N_{I}=2$
+- Size: $|G|=2+1+8=11$
+- Total surprisal: $S_G = 6 * log2(10) + 2 * log2(5) = 24.58$ as two parameters have two contexts and each of the rest has a single context,
+- Entropy: $H(W) = 6 * 1/10 * log2(10) + 2 * 1/5 * log2(5) = 2.92$ (which is lower than the maximum possible entropy we saw from the uniform graph),
+- Expected spread: $E[\log_{2}|C|] = 6 * 1/10 * log2(1) + 2 * 1/5 * log2(2) = 0.4$
+- Total surprisal based performance estimation $P_G = log2(24.58 * 2/11) = 2.16$
+- Expected spread based performance estimation $P'_G = log2((0.4 + 1) * 8 * 2/11) = 1.03$
 
 The second graph has higher performance estimations, total surprisal, and expected spread.
 
