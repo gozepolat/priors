@@ -1,17 +1,19 @@
 # The reusability prior
-Paper (in review) [Machine Learning: Science and Technology](https://iopscience.iop.org/journal/2632-2153)
+A library to analyze deep learning model graphs, estimate performance and compare models _without training_. 
+Accepted paper is available [here](https://doi.org/10.1088/2632-2153/acc713).
 
+Please cite as:
+``
+@article{polat10.1088/2632-2153/acc713,
+	author = {POLAT, AYDIN and Alpaslan, Ferda},
+	journal = {Machine Learning: Science and Technology},
+	title = {{The reusability prior: comparing deep learning models without training}},
+	url = {http://iopscience.iop.org/article/10.1088/2632-2153/acc713},
+	year = {2023}
+}
+``
 
- 
-  - **March10/2023:** Illustrative code release for review
-	* A very simple counting algorithm is given [here](reusability/graph/dag.py) for estimating the number of contexts for each learnable parameter.
-	* Implementation of scope for aggressive parameter sharing is given [here](reusability/aggressive_sharing/scoped_conv.py)
-	* A sample notebook is provided [here](reusability/examples/sample_analyze_efficientnetv2b0.ipynb) for a demonstration of the graph analysis results from the paper.
-	* A sample [notebook](reusability/examples/sample_analyze_figures.ipynb) reproduces the results from the below examples.
-    
-  - **Next**: Full code release after acceptance.
-
-## The reusability prior
+## What is the reusability prior?
 We conjecture the expected number of __contexts__ for model components is the major reason for differences in model performance. We introduce the reusability prior as follows:
 
 > Model components are forced to function in diverse contexts not only due to the training, data, augmentation, and regularization choices but also due to the model design itself. These aspects explicitly or implicitly impact the expected number of contexts for model components. Maximizing this number improves parameter efficiency for models of similar size and capacity. By relying on the repetition of reusable components, a model can learn to describe an approximation of the desired function more efficiently with fewer parameters.

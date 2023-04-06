@@ -5,6 +5,6 @@ setup(
     name='reusability',
     version='0.1.0',
     description='Graph analysis for the reusability prior for comparing deep learning models',
-    author='dlessence',
+    author='gozepolat',
     packages=find_packages(),
 )
