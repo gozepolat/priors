@@ -3,15 +3,16 @@ A library to analyze deep learning model graphs, estimate performance and compar
 Accepted paper is available [here](https://doi.org/10.1088/2632-2153/acc713).
 
 Please cite as:
-``
+
+```
 @article{polat10.1088/2632-2153/acc713,
 	author = {POLAT, AYDIN and Alpaslan, Ferda},
 	journal = {Machine Learning: Science and Technology},
-	title = {{The reusability prior: comparing deep learning models without training}},
+	title = {The reusability prior: comparing deep learning models without training},
 	url = {http://iopscience.iop.org/article/10.1088/2632-2153/acc713},
 	year = {2023}
 }
-``
+```
 
 ## What is the reusability prior?
 We conjecture the expected number of __contexts__ for model components is the major reason for differences in model performance. We introduce the reusability prior as follows:
