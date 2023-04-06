@@ -144,3 +144,19 @@ The second graph has higher performance estimations, total surprisal, and expect
 
 ## Conclusion
 Overall, our framework allows comparing arbitrary directed acyclic graphs in a quantifiable way by relying on a simple counting approach. In practice we applied our technique to several EfficientNetv2 and ResNet-50 models and this approach was able to properly rank them according to their performance _without relying on any training_. More details are available in the paper.
+
+Please cite this repository as:
+
+```
+@software{dlessence_2023_7805346,
+	author       = {dlessence and
+	Aydin Göze Polat},
+	title        = {gozepolat/priors: The Reusability Prior},
+	month        = apr,
+	year         = 2023,
+	publisher    = {Zenodo},
+	version      = {v1.0.0},
+	doi          = {10.5281/zenodo.7805346},
+	url          = {https://doi.org/10.5281/zenodo.7805346}
+}
+```
