@@ -149,8 +149,7 @@ Please cite this repository as:
 
 ```
 @software{dlessence_2023_7805346,
-	author       = {dlessence and
-	Aydin Göze Polat},
+	author       = {Aydin Göze Polat},
 	title        = {gozepolat/priors: The Reusability Prior},
 	month        = apr,
 	year         = 2023,
