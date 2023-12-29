@@ -1,4 +1,5 @@
 # The reusability prior
+
 A library to analyze deep learning model graphs, estimate performance and compare models _without training_. 
 Accepted paper is available [here](https://doi.org/10.1088/2632-2153/acc713).
 
@@ -15,12 +16,14 @@ Please cite as:
 ```
 
 ## What is the reusability prior?
+
 We conjecture the expected number of __contexts__ for model components is the major reason for differences in model performance. We introduce the reusability prior as follows:
 
 > Model components are forced to function in diverse contexts not only due to the training, data, augmentation, and regularization choices but also due to the model design itself. These aspects explicitly or implicitly impact the expected number of contexts for model components. Maximizing this number improves parameter efficiency for models of similar size and capacity. By relying on the repetition of reusable components, a model can learn to describe an approximation of the desired function more efficiently with fewer parameters.
 
 
 ## What is a context?
+
 <img src="reusability/figures/figure1a_context.png" width="60%" height="60%">
 
 
@@ -28,6 +31,7 @@ A context is a path from a parameter associated with an input to an output. $C_1
 
 
 ## A simple counting approach
+
 <img src="reusability/figures/figure3a_horizontal_unrolling.png" width="30%" height="30%">
 
 Frequencies (i.e. the number of contexts) of each learnable parameter in the above graph can be directly counted from the unrolled graph below:
@@ -81,21 +85,25 @@ The recursive approach for counting has exponential complexity. For larger model
 ## Quantities for model comparison
 
 ### Total surprisal
+
 Total surprisal is defined as: $$S_G = - \sum_{i=1}^{N_G} {\log p(w_i)}$$  where ${N_G}$ is the number of learnable parameters.
 
 In this example ${N_G}=8$ and $S_G = (4 * log2(6) + 4 * log2(12)) = 24.68$.
 
 ### Entropy
+
 Entropy, or the expected surprisal, is defined as: $$H(W) = -\sum_{i=1}^{N_G} {p(w_i) \log p(w_i)}.$$
 
 In this example $H(W) = (4 * 1/6 * log2(6) + 4 * 1/12 * log2(12)) = 2.92$.
 
 ### Expected spread
+
 The expected spread is given by: $$E[\log_{2}|C|] = \sum_{i=1}^{N_G} p(w_{i}) \log_{2}|C_{w_{i}}|$$ where $|C_{w_i}|$ is the cardinality of the set of all contexts for $w_i$ (e.g. the counts we obtained from the horizontally unrolled graph).
 
 In this example, $E[\log_{2}|C|] = 4 * 1/6 * log2(2) + 4 * 1/12 * log2(1) = 0.67$
 
 ### Total surprisal based performance estimation
+
 We propose using the total surprisal for estimating the descriptive ability of a model, with the assumption that when other conditions are the same or similar, a model with a higher descriptive ability would perform better:
 
 $P_G = \log_{2}\left(S_G  \frac{N_{I}}{|G|}\right)$ where $N_{I}$ the total number of input nodes and $|G|$ the summation of the total number of input, output and weight nodes.
@@ -103,6 +111,7 @@ $P_G = \log_{2}\left(S_G  \frac{N_{I}}{|G|}\right)$ where $N_{I}$ the total numb
 In this example  $N_{I}=2$ and $|G|=2+1+8=11$ and $P_G = log2(24.68 * 2/11) = 2.17$
 
 ### Expected spread based performance estimation
+
 As an alternative approach, we propose using the expected spread for estimating the descriptive reusability of a model, with the assumption that when other conditions are the same or similar, a model with higher descriptive reusability is more parameter efficient and would perform better:
 
 $P_G = \log_{2}\left(N_G   E[\log_{2}|C| + 1] \frac{N_{I}}{|G|}\right)$
@@ -110,6 +119,7 @@ $P_G = \log_{2}\left(N_G   E[\log_{2}|C| + 1] \frac{N_{I}}{|G|}\right)$
 In this example  $N_{I}=2$ and $|G|=2+1+8=11$ and $P_G = log2((0.67 + 1) * 8 * 2/11) = 1.28$
 
 ## Comparing different graphs
+
 <img src="reusability/figures/figure2a_parameter_efficiency.png" width="30%" height="30%">
 
 We call graphs like above a __uniform graph__, where there is no parameter sharing, and each parameter has only a single context, hence horizontal unrolling leaves them the same. They always have the maximum entropy and an expected spread of zero.
@@ -142,8 +152,14 @@ For the second graph:
 
 The second graph has higher performance estimations, total surprisal, and expected spread.
 
+## Examples & Usage
+
+Please see [examples](reusability/examples/) for usage. 
+
 ## Conclusion
+
 Overall, our framework allows comparing arbitrary directed acyclic graphs in a quantifiable way by relying on a simple counting approach. In practice we applied our technique to several EfficientNetv2 and ResNet-50 models and this approach was able to properly rank them according to their performance _without relying on any training_. More details are available in the paper.
+
 
 Please cite this repository as:
 
